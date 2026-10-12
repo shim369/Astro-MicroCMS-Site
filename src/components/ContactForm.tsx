@@ -14,13 +14,9 @@ export default function ContactForm() {
   } = useForm<FormValues>({ mode: 'onChange' });
 
   const onSubmit = handleSubmit(async (data) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
     try {
-      const response = await sendRequest(formData);
+      const googleReCaptchaToken = await getRecaptchaToken();
+      const response = await sendRequest({ ...data, googleReCaptchaToken });
       if (response.ok) {
         window.location.href = '/thanks';
       } else {
@@ -75,11 +71,35 @@ export default function ContactForm() {
   );
 }
 
-async function sendRequest(formData: FormData) {
-  return await fetch('https://shim.form.newt.so/v1/deCA6xMnK', {
+const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
+
+function loadRecaptcha() {
+  return new Promise<void>((resolve, reject) => {
+    if (window.grecaptcha) {
+      resolve();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}&hl=en`;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load reCAPTCHA'));
+    document.head.appendChild(script);
+  });
+}
+
+async function getRecaptchaToken() {
+  if (!recaptchaSiteKey) return undefined;
+  await loadRecaptcha();
+  await new Promise<void>((resolve) => window.grecaptcha.ready(resolve));
+  return await window.grecaptcha.execute(recaptchaSiteKey, { action: 'submit' });
+}
+
+async function sendRequest(body: FormValues & { googleReCaptchaToken?: string }) {
+  return await fetch('/api/contact', {
     method: 'POST',
-    body: formData,
+    body: JSON.stringify(body),
     headers: {
+      'Content-Type': 'application/json',
       Accept: 'application/json',
     },
   });
