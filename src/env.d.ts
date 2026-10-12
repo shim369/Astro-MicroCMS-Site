@@ -1,6 +1,6 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-	readonly NEWT_SPACE_UID: string
-	readonly NEWT_CDN_API_TOKEN: string
+	readonly MICROCMS_SERVICE_DOMAIN: string
+	readonly MICROCMS_API_KEY: string
 }

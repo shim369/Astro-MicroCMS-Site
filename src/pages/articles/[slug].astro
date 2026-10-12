@@ -2,25 +2,19 @@
 import Layout from '../../layouts/Layout.astro'
 import HeaderDetail from '../../components/HeaderDetail.astro'
 import Contact from '../../components/Contact.astro'
-import { newtClient } from '../../lib/newt'
-import type { Article } from '../../lib/newt'
+import { getArticles } from '../../lib/microcms'
+import type { Article } from '../../lib/microcms'
 import '../../styles/css/detail.css';
 
 export const getStaticPaths = async () => {
-  const { items: articles } = await newtClient.getContents<Article>({
-    appUid: 'blog',
-    modelUid: 'article',
-	query: {
-		select: ["title", "slug", "body", "coverImage", "category", "date"],
-	},
-  })
+  const articles = await getArticles()
   return articles.map((article) => ({
-    params: { slug: article.slug },
+    params: { slug: article.id },
     props: { article },
   }))
 }
 
-const { article } = Astro.props
+const { article } = Astro.props as { article: Article }
 ---
 
 <Layout title={`${article.title} | ASTRO BASE`}>
@@ -31,8 +25,8 @@ const { article } = Astro.props
 			<div class="blog-detail-area">
 				<div class="blog-content">
 				<h1>{article.title}</h1>
-				<div class="date"><span class="material-icons schedule-icon">schedule</span>{ new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(article.date))}</div>
-				<article set:html={article.body} />
+				<div class="date"><span class="material-icons schedule-icon">schedule</span>{ new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(article.publishedAt))}</div>
+				<article set:html={article.content} />
 			</div>
 			</div>
 		</div>

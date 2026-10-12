@@ -2,17 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Contact from "../components/Contact.astro";
-import { newtClient } from "../lib/newt";
-import type { Article } from "../lib/newt";
+import { getArticles } from "../lib/microcms";
 import "../styles/css/index.css";
 
-const { items: articles } = await newtClient.getContents<Article>({
-	appUid: "blog",
-	modelUid: "article",
-	query: {
-		select: ["title", "slug", "body", "coverImage", "category", "date"],
-	},
-});
+const articles = await getArticles();
 ---
 
 <Layout title="ASTRO BASE">
@@ -204,45 +197,43 @@ const { items: articles } = await newtClient.getContents<Article>({
 				<div class="blog-area">
 					{
 						articles.map((article, index) => {
-							if (article.category.name == "Astro") {
-								return (
-									<div
-										class="blog-card"
-										data-aos="fade-up"
-										data-aos-delay={index * 50}
-									>
-										<a href={`/articles/${article.slug}`}>
-											<div class="img-category">
-												<img
-													src={
-														article.coverImage
-															? article.coverImage
-																	.src
-															: ""
-													}
-													alt={article.title}
-													width="400"
-													height="300"
-													loading="lazy"
-												/>
-												<p>{article.category.name}</p>
-											</div>
-											<div class="date">
-												<span class="material-icons schedule-icon">
-													schedule
-												</span>
-												{new Intl.DateTimeFormat(
-													"en-US",
-													{ dateStyle: "medium" },
-												).format(
-													new Date(article.date),
-												)}
-											</div>
-											<h2>{article.title}</h2>
-										</a>
-									</div>
-								);
-							}
+							return (
+								<div
+									class="blog-card"
+									data-aos="fade-up"
+									data-aos-delay={index * 50}
+								>
+									<a href={`/articles/${article.id}`}>
+										<div class="img-category">
+											<img
+												src={
+													article.eyecatch
+														? article.eyecatch
+																.url
+														: ""
+												}
+												alt={article.title}
+												width="400"
+												height="300"
+												loading="lazy"
+											/>
+											<p>{article.category?.name}</p>
+										</div>
+										<div class="date">
+											<span class="material-icons schedule-icon">
+												schedule
+											</span>
+											{new Intl.DateTimeFormat(
+												"en-US",
+												{ dateStyle: "medium" },
+											).format(
+												new Date(article.publishedAt),
+											)}
+										</div>
+										<h2>{article.title}</h2>
+									</a>
+								</div>
+							);
 						})
 					}
 				</div>
