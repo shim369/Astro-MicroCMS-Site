@@ -76,9 +76,8 @@ Vercel にデプロイする場合は、同じ変数を Vercel の Environment V
 | `npm run dev` | 開発サーバーを起動（`localhost:4321`） |
 | `npm run build` | `./dist/` に本番ビルドを出力 |
 | `npm run preview` | ビルド結果をローカルでプレビュー |
-| `npx vercel dev` | お問い合わせ API を含めてローカルで起動 |
 
-`api/contact.ts` は Vercel Function のため、`npm run dev` では動きません。フォーム送信をローカルで試す場合は `vercel dev` を使ってください。
+`api/contact.ts` は Vercel Function ですが、`astro.config.mjs` の開発用ミドルウェアにより `npm run dev` でも `/api/contact` が動きます（`.env` の値が使われます）。
 
 ## デプロイ
 
