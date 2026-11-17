@@ -1,36 +1,121 @@
 ---
-import Layout from '../../layouts/Layout.astro'
-import HeaderDetail from '../../components/HeaderDetail.astro'
-import Contact from '../../components/Contact.astro'
-import { getArticles } from '../../lib/microcms'
-import type { Article } from '../../lib/microcms'
-import '../../styles/css/detail.css';
+import LayoutHome from "../../layouts/LayoutHome.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import { getArticles } from "../../lib/microcms";
+import type { Article } from "../../lib/microcms";
+import "../../styles/css/home.css";
 
 export const getStaticPaths = async () => {
-  const articles = await getArticles()
-  return articles.map((article) => ({
+  // microCMS returns newest first: "newer" is the previous item, "older" the next one
+  const articles = await getArticles();
+  return articles.map((article, i) => ({
     params: { slug: article.id },
-    props: { article },
-  }))
-}
+    props: {
+      article,
+      newer: articles[i - 1] ?? null,
+      older: articles[i + 1] ?? null,
+    },
+  }));
+};
 
-const { article } = Astro.props as { article: Article }
+const { article, newer, older } = Astro.props as {
+  article: Article;
+  newer: Article | null;
+  older: Article | null;
+};
+
+const stripTags = (html: string) =>
+  html.replace(/<[^>]*>/g, "").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
+
+// Show the code language as a label on each code block
+const content = article.content.replace(
+  /<pre><code class="language-([\w-]+)">/g,
+  '<pre data-lang="$1"><code class="language-$1">',
+);
+
+// Table of contents from the h2 headings (microCMS gives them ids)
+const toc = [...article.content.matchAll(/<h2 id="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)].map((m) => ({
+  id: m[1],
+  text: stripTags(m[2]),
+}));
+
+const plain = stripTags(article.content);
+const description = plain.slice(0, 120) + (plain.length > 120 ? "…" : "");
+// ~500 characters per minute for Japanese text
+const minutes = Math.max(1, Math.round(plain.length / 500));
+const date = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(article.publishedAt));
 ---
 
-<Layout title={`${article.title} | ASTRO BASE`}>
-	<HeaderDetail />
-	<main class="bg-gray">
-	<section>
-		<div class="container">
-			<div class="blog-detail-area">
-				<div class="blog-content">
-				<h1>{article.title}</h1>
-				<div class="date"><span class="material-icons schedule-icon">schedule</span>{ new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(article.publishedAt))}</div>
-				<article set:html={article.content} />
-			</div>
-			</div>
-		</div>
-	</section>
-	<Contact />
-	</main>
-</Layout>
+<LayoutHome title={`${article.title} | ASTRO BASE`} description={description}>
+<div class="read-progress" aria-hidden="true"><span></span></div>
+<SiteHeader current="blog" />
+
+<div class="wrapper">
+  <main class="post">
+    <header class="post-hero">
+      <div class="container">
+        <nav class="post-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/articles">Blog</a>
+        </nav>
+        <div class="post-meta">
+          {article.category?.name && <span class="post-cat">{article.category.name}</span>}
+          <time datetime={article.publishedAt}>{date}</time>
+          <span>{minutes} min read</span>
+        </div>
+        <h1 class="post-title">{article.title}</h1>
+      </div>
+    </header>
+
+    {article.eyecatch && (
+      <div class="container">
+        <figure class="post-eyecatch">
+          <img
+            src={`${article.eyecatch.url}?w=1600&fm=webp`}
+            alt=""
+            width={article.eyecatch.width ?? 1600}
+            height={article.eyecatch.height ?? 900}
+          />
+        </figure>
+      </div>
+    )}
+
+    <div class="container post-layout">
+      {toc.length > 1 && (
+        <aside class="post-aside">
+          <nav class="post-toc" aria-label="Table of contents">
+            <p class="post-toc-title">// Contents</p>
+            <ol>
+              {toc.map((h, i) => (
+                <li><a href={`#${h.id}`}><span class="n">{String(i + 1).padStart(2, "0")}</span>{h.text}</a></li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
+      )}
+      <article class="post-body" set:html={content} />
+    </div>
+
+    <div class="container">
+      <nav class="post-pager" aria-label="More posts">
+        {older ? (
+          <a class="older" href={`/articles/${older.id}`}><small>← Older</small><span>{older.title}</span></a>
+        ) : <span></span>}
+        {newer ? (
+          <a class="newer" href={`/articles/${newer.id}`}><small>Newer →</small><span>{newer.title}</span></a>
+        ) : <span></span>}
+      </nav>
+
+      <div class="post-cta">
+        <p>Have a project in mind or a question about this post?</p>
+        <div class="post-cta-btns">
+          <a href="/#a04" class="btn">Get in touch <span class="arr">→</span></a>
+          <a href="/articles" class="btn">All posts</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</div>
+</LayoutHome>
