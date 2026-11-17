@@ -1,5 +1,6 @@
 ---
 import LayoutHome from "../layouts/LayoutHome.astro";
+import BlogCard from "../components/BlogCard.astro";
 import { getArticles } from "../lib/microcms";
 import "../styles/css/home.css";
 
@@ -127,25 +128,10 @@ const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? "";
             <span class="label" data-r><span class="idx">03 /</span>Blog</span>
             <h2 class="sec-title split">Latest <span class="o">Blog</span></h2>
           </div>
-          <a href="#a03" class="btn" data-r>View all <span class="arr">→</span></a>
+          <a href="/articles" class="btn" data-r>View all <span class="arr">→</span></a>
         </div>
         <div class="blog-area" id="blogArea">
-          {articles.map((a) => (
-            <article class="blog-card" data-r>
-              <a href={`/articles/${a.id}`}>
-                <div class="img-category">
-                  <img src={a.eyecatch ? a.eyecatch.url : ""} alt={a.title} width="400" height="300" loading="lazy" />
-                  {a.category?.name && <p class="cat">{a.category.name}</p>}
-                  <span class="go" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 15L15 3M6 3h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
-                </div>
-                <div class="date">
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.2" stroke="currentColor"/><path d="M7 3.5V7l2.4 1.6" stroke="currentColor"/></svg>
-                  {new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(new Date(a.publishedAt))}
-                </div>
-                <h3><span>{a.title}</span></h3>
-              </a>
-            </article>
-          ))}
+          {articles.map((a) => <BlogCard article={a} />)}
         </div>
       </div>
     </section>

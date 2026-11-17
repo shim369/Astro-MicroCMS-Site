@@ -1,0 +1,31 @@
+---
+/**
+ * Header + mobile menu for sub pages (blog list, article).
+ * The top page has its own copy because home.js drives its animations.
+ */
+export interface Props {
+  current?: "blog";
+}
+
+const { current } = Astro.props;
+const isBlog = current === "blog";
+---
+<header class="site-header" id="siteHeader">
+  <div class="logo"><a href="/" aria-label="ASTRO BASE home"><span>ASTRO</span> <span>BASE</span></a></div>
+  <nav class="pc-nav" aria-label="Main">
+    <ul class="header-lists">
+      <li><a href="/#a01"><span class="n">01</span><span class="tw"><span class="t" data-t="About">About</span></span></a></li>
+      <li><a href="/#a02"><span class="n">02</span><span class="tw"><span class="t" data-t="Skills">Skills</span></span></a></li>
+      <li><a href="/articles" class:list={{ current: isBlog }} aria-current={isBlog ? "page" : undefined}><span class="n">03</span><span class="tw"><span class="t" data-t="Blog">Blog</span></span></a></li>
+      <li><a href="/#a04"><span class="tw"><span class="t" data-t="Contact →">Contact →</span></span></a></li>
+    </ul>
+  </nav>
+  <button class="sp-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="spNav"><span></span><span></span></button>
+</header>
+<nav class="sp-nav" id="spNav" aria-label="Mobile" aria-hidden="true">
+  <a href="/#a01"><small>01</small>About</a>
+  <a href="/#a02"><small>02</small>Skills</a>
+  <a href="/articles"><small>03</small>Blog</a>
+  <a href="/#a04"><small>04</small>Contact</a>
+  <p class="sp-foot">// built with Astro &amp; microCMS</p>
+</nav>

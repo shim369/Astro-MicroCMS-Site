@@ -625,6 +625,14 @@ body.menu-open .site-header { transform: none; background: transparent; -webkit-
 }
 @media (max-width: 600px) { .blog-area { grid-template-columns: 1fr; gap: 3rem; } }
 
+/* blog list page (/articles) */
+.blog-list { padding-top: clamp(9rem, 16vw, 12rem); min-height: 100vh; }
+.blog-list .blog-area { row-gap: clamp(3rem, 5vw, 4.5rem); }
+.blog-list .blog-card:nth-child(n) { margin-top: 0; }
+.js .blog-list [data-r] { opacity: 1; transform: none; }
+.blog-empty { color: var(--muted); }
+.blog-back { margin-top: clamp(4rem, 8vw, 6rem); }
+
 /* ---------- contact ---------- */
 .contact {
   position: relative;

@@ -1,0 +1,40 @@
+---
+import LayoutHome from "../../layouts/LayoutHome.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import { getArticles } from "../../lib/microcms";
+import "../../styles/css/home.css";
+
+const articles = await getArticles();
+---
+
+<LayoutHome title="Blog | ASTRO BASE" description="All blog posts from ASTRO BASE — notes on Astro, microCMS and web development.">
+<SiteHeader current="blog" />
+
+<div class="wrapper">
+  <main>
+    <section class="blog blog-list" aria-labelledby="blogTitle">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <span class="label"><span class="idx">03 /</span>Blog</span>
+            <h1 class="sec-title" id="blogTitle">All <span class="o">Posts</span></h1>
+          </div>
+          <p>{`${articles.length} ${articles.length === 1 ? "post" : "posts"}`} on Astro, microCMS and web development.</p>
+        </div>
+        {articles.length > 0 ? (
+          <div class="blog-area">
+            {articles.map((a) => <BlogCard article={a} />)}
+          </div>
+        ) : (
+          <p class="blog-empty">No posts yet.</p>
+        )}
+        <div class="blog-back"><a href="/" class="btn">← Back to home</a></div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</div>
+</LayoutHome>
