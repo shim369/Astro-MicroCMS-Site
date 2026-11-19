@@ -5,8 +5,10 @@ Astro + microCMS で作ったポートフォリオサイトです。ブログ記
 ## 技術構成
 
 - [Astro](https://astro.build/) 3（静的出力）
-- React（お問い合わせフォーム / react-hook-form）
 - [microCMS](https://microcms.io/)（`microcms-js-sdk`）
+- Sass（SCSS）
+- GSAP 3 + ScrollTrigger（CDN から読み込み、トップページのアニメーション）
+- 素の JavaScript（`public/home.js` / `public/site.js`。お問い合わせフォームの入力チェックと送信もここで行います）
 - Vercel Functions（`api/contact.ts`）+ nodemailer
 - Google reCAPTCHA v3（任意）
 - Node.js 24.x
@@ -16,22 +18,48 @@ Astro + microCMS で作ったポートフォリオサイトです。ブログ記
 ```
 /
 ├── api/
-│   └── contact.ts          # お問い合わせ送信（Vercel Function）
+│   └── contact.ts             # お問い合わせ送信（Vercel Function）
 ├── public/
+│   ├── home.js                # トップページの動き（GSAP）とお問い合わせフォーム
+│   ├── site.js                # 下層ページ共通（メニュー、目次、読了バーなど）
+│   └── img/
 ├── src/
 │   ├── components/
-│   │   └── ContactForm.tsx # お問い合わせフォーム
+│   │   ├── BlogCard.astro     # ブログカード
+│   │   ├── SiteHeader.astro   # 下層ページ用ヘッダー
+│   │   └── SiteFooter.astro   # 下層ページ用フッター
 │   ├── layouts/
+│   │   └── LayoutHome.astro   # 共通レイアウト（head / フォント）
 │   ├── lib/
-│   │   └── microcms.ts     # microCMS クライアント / 記事取得
+│   │   └── microcms.ts        # microCMS クライアント / 記事取得
 │   ├── pages/
-│   │   ├── index.astro
-│   │   └── articles/[slug].astro
+│   │   ├── index.astro        # トップページ
+│   │   ├── articles/
+│   │   │   ├── index.astro    # ブログ一覧
+│   │   │   └── [slug].astro   # 記事ページ
+│   │   ├── thanks.astro       # 送信完了
+│   │   └── error.astro        # 送信失敗
 │   ├── styles/
+│   │   └── scss/              # 下記「スタイル」参照
 │   └── types/
-│       └── article.ts      # 記事の型定義
+│       └── article.ts         # 記事の型定義
 └── package.json
 ```
+
+## スタイル
+
+`src/styles/scss/style.scss` がエントリーで、各ページはこのファイルだけを読み込みます。
+
+| ディレクトリ | 内容 |
+| :--- | :--- |
+| `abstracts/` | 変数（色・フォント・ブレイクポイント）と mixin（`mq()` など） |
+| `base/` | リセット、CSS 変数（`:root`）、keyframes、スクロール表示と reduced motion |
+| `components/` | 見出しラベル・ボタンなどの共通パーツ、カーソル、ローダー |
+| `layout/` | ヘッダー、フッター |
+| `sections/` | トップページの各セクション |
+| `pages/` | ブログ一覧、記事ページ、thanks / error |
+
+色は Sass 変数（`$yellow` など）で管理し、JS から参照できるよう同じ値を CSS 変数（`--yellow` など）としても出力しています。メディアクエリは `@include mq(md)` のように書きます。
 
 ## microCMS の設定
 
