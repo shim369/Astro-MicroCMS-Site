@@ -118,9 +118,9 @@
     { out: '<span class="dim">&gt; astro build</span>' },
     { out: '' },
     { out: '<span class="ok">▶</span> Fetching articles from <span class="hl">microCMS</span>' },
+    { out: '<span class="ok">▶</span> Compiling styles: src/styles/scss/style.scss' },
     { out: '<span class="ok">▶</span> Rendering src/pages/index.astro' },
     { out: '<span class="ok">▶</span> Rendering src/pages/articles/[slug].astro' },
-    { out: '<span class="ok">▶</span> Hydrating island: ContactForm.tsx' },
     { out: '' },
     { out: '<span class="ok">✓</span> Static build complete. Ready to deploy on <span class="hl">Vercel</span>' }
   ];
