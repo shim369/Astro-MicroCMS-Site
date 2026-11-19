@@ -1,0 +1,17 @@
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 14px; height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: var(--yellow);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 9500;
+  opacity: 0;
+  transition: width .4s var(--ease), height .4s var(--ease), margin .4s var(--ease), opacity .3s;
+
+  &.on { opacity: 1; }
+  &.big { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
+}
+@media (hover: none), (pointer: coarse) { .cursor { display: none; } }

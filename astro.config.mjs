@@ -40,5 +40,13 @@ const vercelApiDev = () => ({
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), vercelApiDev()]
+  integrations: [react(), vercelApiDev()],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        // Vite 4 still calls Sass through its legacy JS API
+        scss: { silenceDeprecations: ['legacy-js-api'] },
+      },
+    },
+  },
 });

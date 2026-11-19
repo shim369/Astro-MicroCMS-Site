@@ -1,0 +1,31 @@
+// Sass-side design tokens.
+// The same values are exposed as CSS custom properties in base/_root.scss
+// so that JS (GSAP) and inline styles can read them at runtime.
+
+// colors
+$black: #0a0a0a;
+$black-2: #121212;
+$black-3: #1a1a1a;
+$yellow: #ffe300;
+$yellow-deep: #d8c001;
+$white: #f4f4ec;
+$red: #ff6b5b;
+$red-deep: #9b1c00;
+
+// type
+$font: "Montserrat", sans-serif;
+$mono: "JetBrains Mono", ui-monospace, monospace;
+
+// motion
+$ease: cubic-bezier(.16, 1, .3, 1);
+
+// breakpoints (max-width)
+$breakpoints: (
+  xs: 520px,
+  sm: 600px,
+  sm2: 620px,
+  md: 800px,
+  lg: 900px,
+  lg2: 960px,
+  xl: 1000px,
+);

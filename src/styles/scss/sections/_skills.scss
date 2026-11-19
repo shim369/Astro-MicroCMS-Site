@@ -1,0 +1,88 @@
+@use "../abstracts" as *;
+
+.skills {
+  position: relative;
+  padding: clamp(6rem, 11vw, 9rem) 0;
+  background-color: var(--black-2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23b1b1b1' fill-opacity='0.12'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--black) 0%, transparent 18%, transparent 82%, var(--black) 100%);
+    pointer-events: none;
+  }
+  .container { position: relative; }
+}
+
+.skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+
+.skill {
+  position: relative;
+  padding: 2.4rem 2.2rem 2.2rem;
+  background: var(--black);
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  transition: color .5s var(--ease);
+
+  // spotlight that follows the pointer (--mx / --my set by home.js)
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba($yellow, .14), transparent 45%);
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  &:hover::before { opacity: 1; }
+
+  // yellow fill when the card scrolls into focus
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--yellow);
+    clip-path: circle(0% at 100% 0%);
+    transition: clip-path .8s var(--ease);
+  }
+  &.is-active::after { clip-path: circle(150% at 100% 0%); }
+  &.is-active { color: var(--black); }
+}
+
+.skill-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: auto; }
+.skill-logo {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  filter: grayscale(1) contrast(1.1);
+  transition: filter .5s, transform .7s var(--ease);
+
+  .skill:hover & { filter: none; transform: rotate(-12deg) scale(1.08); }
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+.skill-n {
+  @include mono(.78rem); color: var(--muted); transition: color .4s;
+
+  .skill.is-active & { color: rgba($black, .6); }
+}
+.skill {
+  h3 { margin-top: 3.2rem; font-weight: 800; font-size: 1.8rem; letter-spacing: -.03em; line-height: 1.1; }
+  p { margin-top: .8rem; color: var(--muted); font-size: .92rem; line-height: 1.75; transition: color .4s; }
+  &.is-active p { color: rgba($black, .75); }
+  .tag { margin-top: 1.4rem; @include mono(.7rem); color: var(--yellow); transition: color .4s; }
+  &.is-active .tag { color: var(--black); }
+}
+
+@include mq(xl) { .skills-grid { grid-template-columns: repeat(2, 1fr); } }
+@include mq(sm2) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .skill { min-height: 0; padding: 1.8rem 1.4rem; }
+  .skill h3 { margin-top: 1.6rem; }
+}

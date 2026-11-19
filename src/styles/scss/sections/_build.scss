@@ -1,0 +1,66 @@
+@use "../abstracts" as *;
+
+$term-shadow: 0 40px 80px -30px rgba(0, 0, 0, .8);
+
+.build { position: relative; padding: clamp(7rem, 12vw, 10rem) 0 0; }
+.build-grid { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(3rem, 6vw, 6rem); align-items: center; }
+
+// fake terminal
+.term {
+  position: relative;
+  background: #0f0f0f;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: $term-shadow, 18px 18px 0 0 var(--yellow);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.term-bar {
+  display: flex; align-items: center; gap: .5rem; padding: .85rem 1rem; border-bottom: 1px solid var(--line); background: #151515;
+
+  i { width: 11px; height: 11px; border-radius: 50%; background: #333; }
+  i:first-child { background: var(--yellow); }
+  span { margin-left: auto; margin-right: auto; padding-right: 3rem; @include mono(.72rem); color: var(--muted); }
+}
+.term-body {
+  min-height: 21rem;
+  padding: 1.6rem 1.6rem 2rem;
+  @include mono(clamp(.74rem, 1.05vw, .88rem));
+  line-height: 1.95;
+  color: var(--white);
+  white-space: pre-wrap;
+  overflow-x: auto;
+
+  .ps { color: var(--yellow); }
+  .dim { color: var(--muted); }
+  .ok { color: var(--yellow); }
+  .hl { background: var(--yellow); color: var(--black); padding: 0 .3em; }
+}
+.caret { display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em; background: var(--yellow); animation: blink 1s steps(1) infinite; }
+
+.build-title {
+  margin: 1.2rem 0 2.4rem;
+  font-weight: 900;
+  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+  line-height: .95;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+
+  em { font-style: normal; @include outline-text(1.5px, var(--yellow)); }
+}
+
+.points {
+  border-top: 1px solid var(--line);
+
+  li { display: grid; grid-template-columns: 2.6rem 1fr; gap: .8rem; padding: 1.3rem 0; border-bottom: 1px solid var(--line); }
+  .pn { @include mono(.75rem); color: var(--yellow); padding-top: .25rem; }
+  h3 { font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; margin-bottom: .25rem; }
+  p { color: var(--muted); font-size: .92rem; line-height: 1.7; }
+}
+
+@include mq(lg2) {
+  .build-grid { grid-template-columns: 1fr; }
+  .term { box-shadow: $term-shadow, 10px 10px 0 0 var(--yellow); }
+  .term-body { min-height: 19rem; }
+}

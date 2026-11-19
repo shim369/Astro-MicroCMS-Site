@@ -1,0 +1,8 @@
+// scroll reveal (home.js / site.js animate [data-r] in)
+.js [data-r] { opacity: 0; transform: translateY(48px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  .js [data-r] { opacity: 1; transform: none; }
+  .loader { display: none; }
+}

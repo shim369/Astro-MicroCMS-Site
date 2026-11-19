@@ -4,7 +4,7 @@ import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { getArticles } from "../../lib/microcms";
 import type { Article } from "../../lib/microcms";
-import "../../styles/css/home.css";
+import "../../styles/scss/style.scss";
 
 export const getStaticPaths = async () => {
   // microCMS returns newest first: "newer" is the previous item, "older" the next one

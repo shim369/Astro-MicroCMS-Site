@@ -1,0 +1,179 @@
+@use "../abstracts" as *;
+
+// /articles/[slug]
+.read-progress {
+  position: fixed; inset: 0 0 auto; height: 3px; z-index: 1001; pointer-events: none;
+
+  span { display: block; height: 100%; background: var(--yellow); transform: scaleX(0); transform-origin: 0 50%; }
+}
+
+// ---------- hero ----------
+.post-hero { padding: clamp(8.5rem, 15vw, 11rem) 0 clamp(2.5rem, 5vw, 4rem); }
+.post-crumbs {
+  display: flex; gap: .7rem; @include mono(.76rem); color: var(--muted);
+
+  a:hover { color: var(--yellow); }
+}
+.post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.4rem; margin-top: 2rem; @include mono(.78rem); color: var(--muted); }
+.post-cat { background: var(--yellow); color: var(--black); font-weight: 500; padding: .3rem .7rem; letter-spacing: .06em; text-transform: uppercase; }
+.post-title {
+  max-width: 22em;
+  margin-top: 1.4rem;
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4.6vw, 3.6rem);
+  line-height: 1.25;
+  letter-spacing: -.02em;
+  font-feature-settings: "palt";
+}
+
+.post-eyecatch {
+  border: 1px solid var(--line); background: var(--black-2); overflow: hidden;
+
+  img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+}
+
+// ---------- toc + body ----------
+.post-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 46rem);
+  justify-content: center;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  padding-top: clamp(3rem, 7vw, 5.5rem);
+
+  &:not(:has(.post-aside)) { grid-template-columns: minmax(0, 46rem); }
+}
+.post-aside { position: relative; }
+.post-toc {
+  position: sticky; top: 6.5rem;
+
+  &-title { @include mono(.74rem); color: var(--yellow); margin-bottom: 1rem; }
+  ol { list-style: none; border-left: 1px solid var(--line); }
+  a {
+    display: flex;
+    gap: .7rem;
+    margin-left: -1px;
+    padding: .55rem 0 .55rem 1rem;
+    border-left: 1px solid transparent;
+    font-size: .82rem;
+    line-height: 1.5;
+    color: var(--muted);
+    transition: color .3s, border-color .3s;
+
+    .n { @include mono(.7rem); padding-top: .1rem; }
+    &:hover { color: var(--white); }
+    &.is-active { color: var(--yellow); border-left-color: var(--yellow); }
+  }
+}
+
+// rich text from microCMS
+.post-body {
+  font-size: 1.02rem; line-height: 2; letter-spacing: .02em; overflow-wrap: anywhere;
+
+  > * + * { margin-top: 1.5em; }
+  h2 {
+    position: relative;
+    margin-top: 3.2em;
+    padding-top: 1.3em;
+    border-top: 1px solid var(--line);
+    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.45;
+    letter-spacing: -.01em;
+    scroll-margin-top: 6rem;
+
+    &::before { content: ""; position: absolute; top: -1px; left: 0; width: 3rem; height: 3px; background: var(--yellow); }
+  }
+  h3 {
+    margin-top: 2.4em; font-size: 1.2rem; font-weight: 700; line-height: 1.5; scroll-margin-top: 6rem;
+
+    &::before { content: "# "; color: var(--yellow); font-family: var(--mono); }
+  }
+  h2 + *, h3 + * { margin-top: 1em; }
+  a {
+    color: var(--yellow); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+
+    &:hover { text-decoration-thickness: 2px; }
+  }
+  strong { font-weight: 700; color: var(--white); background: linear-gradient(transparent 65%, rgba($yellow, .25) 0); }
+  ul, ol { padding-left: 1.4em; }
+  ul { list-style: none; }
+  ul > li { position: relative; }
+  ul > li::before { content: ""; position: absolute; left: -1.1em; top: .85em; width: 6px; height: 6px; background: var(--yellow); }
+  ol { list-style: decimal; }
+  ol > li::marker { color: var(--yellow); font-family: var(--mono); font-size: .85em; }
+  li + li { margin-top: .4em; }
+  blockquote { padding: .2em 0 .2em 1.4em; border-left: 3px solid var(--yellow); color: var(--muted); }
+  img { height: auto; border: 1px solid var(--line); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 3em 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; display: block; overflow-x: auto; }
+  th, td { padding: .7em 1em; border: 1px solid var(--line); text-align: left; }
+  th { background: var(--black-3); font-weight: 700; }
+  code {
+    @include mono(.86em);
+    padding: .15em .45em;
+    background: var(--black-3);
+    border: 1px solid var(--line);
+    color: var(--yellow);
+  }
+  pre {
+    position: relative;
+    padding: 2.6rem 1.4rem 1.4rem;
+    background: var(--black-2);
+    border: 1px solid var(--line);
+    overflow-x: auto;
+    line-height: 1.75;
+    letter-spacing: 0;
+    tab-size: 2;
+
+    // language label (data-lang is added in [slug].astro)
+    &::before {
+      content: attr(data-lang);
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: .3rem .8rem;
+      @include mono(.68rem);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      color: var(--black);
+    }
+    &:not([data-lang])::before { content: "code"; }
+    code { padding: 0; background: none; border: 0; color: var(--white); font-size: .84rem; }
+  }
+}
+
+// ---------- older / newer ----------
+.post-pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: clamp(5rem, 10vw, 8rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+
+  a { display: flex; flex-direction: column; gap: .6rem; padding: 2rem 0; transition: color .3s; }
+  .older { padding-right: 2rem; }
+  .newer { padding-left: 2rem; border-left: 1px solid var(--line); text-align: right; grid-column: 2; }
+  small { @include mono(.74rem); color: var(--yellow); }
+  span { font-weight: 700; font-size: 1.05rem; line-height: 1.5; }
+  a:hover span { color: var(--yellow); }
+}
+
+.post-cta {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(5rem, 9vw, 7rem);
+
+  p { font-weight: 700; font-size: clamp(1.1rem, 2vw, 1.4rem); }
+  &-btns { display: flex; flex-wrap: wrap; gap: 1rem; }
+}
+
+@include mq(lg2) {
+  .post-layout { grid-template-columns: minmax(0, 46rem); }
+  .post-toc { position: static; padding: 1.4rem 1.4rem .8rem; background: var(--black-2); border: 1px solid var(--line); }
+}
+@include mq(sm) {
+  .post-body { font-size: .98rem; line-height: 1.9; }
+  .post-body pre { margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); border-left: 0; border-right: 0; }
+  .post-pager { grid-template-columns: 1fr; }
+  .post-pager .older { padding-right: 0; }
+  .post-pager .newer { grid-column: 1; padding-left: 0; border-left: 0; border-top: 1px solid var(--line); text-align: left; }
+}

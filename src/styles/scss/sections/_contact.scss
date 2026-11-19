@@ -1,0 +1,115 @@
+@use "../abstracts" as *;
+
+.contact {
+  position: relative;
+  background: var(--yellow);
+  color: var(--black);
+  padding: clamp(6rem, 11vw, 9rem) 0 clamp(4rem, 7vw, 6rem);
+  overflow: hidden;
+  // --contact-r is tweened by home.js
+  border-radius: 50% 50% 0 0 / var(--contact-r, 10%) var(--contact-r, 10%) 0 0;
+
+  // invert the shared heading on the yellow background
+  .label { color: var(--black); }
+  .label::before { background: var(--black); }
+  .label .idx { color: rgba($black, .55); }
+  .sec-title .o { -webkit-text-stroke-color: var(--black); }
+}
+.contact-grid { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(3rem, 7vw, 7rem); align-items: start; }
+.contact-intro {
+  p { margin-top: 2rem; font-size: 1.05rem; max-width: 26rem; color: rgba($black, .75); }
+  .mail { display: inline-flex; margin-top: 2rem; @include mono(.85rem); gap: .6rem; align-items: center; }
+  .mail i { width: 8px; height: 8px; border-radius: 50%; background: var(--black); animation: blink 1.4s steps(1) infinite; }
+}
+
+// ---------- form ----------
+.form-box { display: flex; flex-direction: column; gap: 1.6rem; padding-top: .6rem; }
+.field {
+  position: relative;
+
+  input, textarea {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid rgba($black, .25);
+    border-radius: 0;
+    padding: 1.6rem 0 .8rem;
+    color: var(--black);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 1.2rem;
+    resize: vertical;
+    transition: border-color .3s;
+  }
+  textarea { min-height: 160px; }
+  input:focus, textarea:focus { outline: none; border-bottom-color: var(--black); }
+
+  // floating label
+  label {
+    position: absolute;
+    left: 0;
+    top: 1.6rem;
+    @include mono(.85rem);
+    color: rgba($black, .6);
+    pointer-events: none;
+    transform-origin: left;
+    transition: transform .45s var(--ease), color .3s;
+  }
+  input:focus + label, input:not(:placeholder-shown) + label,
+  textarea:focus + label, textarea:not(:placeholder-shown) + label { transform: translateY(-1.5rem) scale(.82); color: var(--black); }
+
+  .err { display: block; min-height: 1.2rem; margin-top: .45rem; @include mono(.75rem); color: $red-deep; }
+  &.invalid input, &.invalid textarea { border-bottom-color: $red-deep; }
+}
+.form-foot { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.submit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 2.2rem;
+  border: 2px solid var(--black);
+  background: var(--black);
+  color: var(--yellow);
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: .9rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color .45s var(--ease);
+
+  &::before { @include fill-layer(var(--yellow), translateY(101%)); z-index: -1; }
+  &:hover { color: var(--black); }
+  &:hover::before { transform: none; }
+  &[disabled] { opacity: .6; pointer-events: none; }
+}
+.form-status { @include mono(.8rem); }
+.reCAPTCHA {
+  margin-top: 1rem; font-size: .76rem; color: rgba($black, .65);
+
+  a { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
+}
+.grecaptcha-badge { visibility: hidden; }
+
+// giant "ASTRO BASE" at the bottom
+.contact-logo {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  font-weight: 900;
+  font-size: clamp(3.6rem, 15.5vw, 15rem);
+  line-height: .8;
+  letter-spacing: -.06em;
+  white-space: nowrap;
+  text-align: center;
+  user-select: none;
+
+  span { display: inline-block; }
+  .o { @include outline-text(2px, var(--black)); }
+}
+
+@include mq(lg) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact { border-radius: 50% 50% 0 0 / 3% 3% 0 0; }
+}

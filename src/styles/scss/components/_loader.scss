@@ -1,0 +1,18 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9800;
+  background: var(--yellow);
+  color: var(--black);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: var(--gutter);
+  font-weight: 900;
+  transition: clip-path 1s var(--ease) .1s;
+  clip-path: inset(0 0 0 0);
+
+  &.done { clip-path: inset(0 0 100% 0); }
+  .ld-name { font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -.02em; }
+  .ld-count { font-size: clamp(5rem, 18vw, 14rem); line-height: .8; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+}

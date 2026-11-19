@@ -1,0 +1,17 @@
+@use "../abstracts" as *;
+
+footer { background: var(--black); padding: 2rem 0; @include mono(.76rem); color: var(--muted); }
+
+.ft {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+
+  nav { display: flex; gap: 1.8rem; }
+  nav a:hover { color: var(--yellow); }
+}
+
+.to-top {
+  background: none; border: 0; color: var(--yellow); font: inherit; cursor: pointer; display: inline-flex; gap: .5rem; align-items: center;
+
+  span { display: inline-block; transition: transform .4s var(--ease); }
+  &:hover span { transform: translateY(-4px); }
+}

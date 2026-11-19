@@ -1,0 +1,15 @@
+@use "../abstracts" as *;
+
+// /thanks, /error
+.result {
+  min-height: 100vh; display: flex; align-items: center; padding: clamp(9rem, 16vw, 12rem) 0 clamp(5rem, 10vw, 8rem);
+
+  &-text { margin-top: 2rem; max-width: 32rem; color: var(--muted); font-size: 1.05rem; }
+  &-status {
+    display: inline-flex; align-items: center; gap: .6rem; margin-top: 1.5rem; @include mono(.8rem); color: var(--yellow);
+
+    i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: blink 1.4s steps(1) infinite; }
+  }
+  &.is-error &-status { color: $red; }
+  &-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
+}

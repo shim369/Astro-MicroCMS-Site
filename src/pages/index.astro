@@ -2,7 +2,7 @@
 import LayoutHome from "../layouts/LayoutHome.astro";
 import BlogCard from "../components/BlogCard.astro";
 import { getArticles } from "../lib/microcms";
-import "../styles/css/home.css";
+import "../styles/scss/style.scss";
 
 // Show only the latest 3 posts on the top page
 const articles = (await getArticles()).slice(0, 3);

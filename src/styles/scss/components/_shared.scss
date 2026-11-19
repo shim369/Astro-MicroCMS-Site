@@ -1,0 +1,68 @@
+@use "../abstracts" as *;
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  @include mono(.78rem);
+  letter-spacing: .08em;
+  color: var(--yellow);
+
+  &::before { content: ""; width: 8px; height: 8px; background: var(--yellow); }
+  .idx { color: var(--muted); }
+}
+
+.sec-title {
+  font-weight: 900;
+  font-size: clamp(3.4rem, 10vw, 9rem);
+  line-height: .9;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+  margin-top: 1.2rem;
+
+  .o { @include outline-text(1.5px, var(--white)); }
+  .y { color: var(--yellow); }
+}
+
+.sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+
+  p { max-width: 26rem; color: var(--muted); font-size: .98rem; }
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .9rem;
+  padding: 1.05rem 1.6rem;
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color .45s var(--ease), border-color .45s;
+  cursor: pointer;
+
+  &::before {
+    @include fill-layer(var(--yellow), translateX(-101%), .55s);
+    z-index: -1;
+  }
+  &:hover { color: var(--black); border-color: var(--yellow); }
+  &:hover::before { transform: none; }
+  .arr { display: inline-block; transition: transform .5s var(--ease); }
+  &:hover .arr { transform: translateX(4px); }
+}
+
+// split text (chars / words wrapped by JS)
+.split {
+  .ch { display: inline-block; will-change: transform; }
+  .wd { display: inline-block; white-space: nowrap; overflow: hidden; vertical-align: top; padding: 0 .02em; }
+}

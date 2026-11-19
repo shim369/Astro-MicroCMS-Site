@@ -1,0 +1,10 @@
+// /articles
+.blog-list {
+  padding-top: clamp(9rem, 16vw, 12rem); min-height: 100vh;
+
+  .blog-area { row-gap: clamp(3rem, 5vw, 4.5rem); }
+  .blog-card:nth-child(n) { margin-top: 0; }
+  .js & [data-r] { opacity: 1; transform: none; }
+}
+.blog-empty { color: var(--muted); }
+.blog-back { margin-top: clamp(4rem, 8vw, 6rem); }

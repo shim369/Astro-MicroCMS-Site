@@ -1,0 +1,32 @@
+@use "sass:map";
+@use "variables" as *;
+
+// @include mq(md) { ... }  →  @media (max-width: 800px)
+// also accepts a raw length: @include mq(720px)
+@mixin mq($bp) {
+  $w: $bp;
+  @if map.has-key($breakpoints, $bp) {
+    $w: map.get($breakpoints, $bp);
+  }
+  @media (max-width: $w) { @content; }
+}
+
+// panel that slides in on hover (.btn / .submit / header CTA)
+@mixin fill-layer($bg, $from, $dur: .5s) {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: $bg;
+  transform: $from;
+  transition: transform $dur var(--ease);
+}
+
+@mixin mono($size) {
+  font-family: var(--mono);
+  font-size: $size;
+}
+
+@mixin outline-text($w, $color) {
+  color: transparent;
+  -webkit-text-stroke: $w $color;
+}
