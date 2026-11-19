@@ -633,6 +633,14 @@ body.menu-open .site-header { transform: none; background: transparent; -webkit-
 .blog-empty { color: var(--muted); }
 .blog-back { margin-top: clamp(4rem, 8vw, 6rem); }
 
+/* ---------- thanks / error ---------- */
+.result { min-height: 100vh; display: flex; align-items: center; padding: clamp(9rem, 16vw, 12rem) 0 clamp(5rem, 10vw, 8rem); }
+.result-text { margin-top: 2rem; max-width: 32rem; color: var(--muted); font-size: 1.05rem; }
+.result-status { display: inline-flex; align-items: center; gap: .6rem; margin-top: 1.5rem; font-family: var(--mono); font-size: .8rem; color: var(--yellow); }
+.result-status i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: blink 1.4s steps(1) infinite; }
+.result.is-error .result-status { color: #ff6b5b; }
+.result-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
+
 /* ---------- article page (/articles/[slug]) ---------- */
 .read-progress { position: fixed; inset: 0 0 auto; height: 3px; z-index: 1001; pointer-events: none; }
 .read-progress span { display: block; height: 100%; background: var(--yellow); transform: scaleX(0); transform-origin: 0 50%; }

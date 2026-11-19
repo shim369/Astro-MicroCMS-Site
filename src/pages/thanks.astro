@@ -1,17 +1,29 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import HeaderContact from '../components/HeaderContact.astro'
-import '../styles/css/detail.css';
+import LayoutHome from "../layouts/LayoutHome.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/css/home.css";
 ---
 
-<Layout title="Thank you">
-	<HeaderContact />
-	<main class="bg-gray">
-    <div class="contact-box">
-        <h1>Thank you!</h1>
-        <div>
-        <a href="/">Back to Top Page</a>
+<LayoutHome title="Thank you | ASTRO BASE" description="Your message has been sent.">
+<SiteHeader />
+
+<div class="wrapper">
+  <main>
+    <section class="result" aria-labelledby="resultTitle">
+      <div class="container">
+        <span class="label"><span class="idx">04 /</span>Contact</span>
+        <h1 class="sec-title" id="resultTitle">Thank <span class="o">you</span><span class="y">.</span></h1>
+        <p class="result-text">Your message has been sent. I'll get back to you as soon as possible.</p>
+        <p class="result-status"><i></i>// message delivered</p>
+        <div class="result-actions">
+          <a href="/" class="btn">← Back to home</a>
+          <a href="/articles" class="btn">Read the blog <span class="arr">→</span></a>
         </div>
-    </div>
-    </main>
-</Layout>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</div>
+</LayoutHome>

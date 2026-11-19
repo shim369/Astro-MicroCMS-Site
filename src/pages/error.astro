@@ -1,17 +1,29 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import HeaderContact from '../components/HeaderContact.astro'
-import '../styles/css/detail.css';
+import LayoutHome from "../layouts/LayoutHome.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/css/home.css";
 ---
 
-<Layout title="Error">
-	<HeaderContact />
-	<main class="bg-gray">
-    <div class="Result contact-box">
-        <h1>Error!</h1>
-        <div>
-        <a href="/#a04">Back to Contact Form</a>
+<LayoutHome title="Error | ASTRO BASE" description="Your message could not be sent.">
+<SiteHeader />
+
+<div class="wrapper">
+  <main>
+    <section class="result is-error" aria-labelledby="resultTitle">
+      <div class="container">
+        <span class="label"><span class="idx">04 /</span>Contact</span>
+        <h1 class="sec-title" id="resultTitle">Oops<span class="y">!</span></h1>
+        <p class="result-text">Something went wrong and your message could not be sent. Please try again in a moment.</p>
+        <p class="result-status"><i></i>// send failed</p>
+        <div class="result-actions">
+          <a href="/#a04" class="btn">← Back to contact form</a>
+          <a href="/" class="btn">Home <span class="arr">→</span></a>
         </div>
-    </div>
-    </main>
-</Layout>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</div>
+</LayoutHome>
