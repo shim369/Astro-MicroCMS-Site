@@ -53,7 +53,7 @@ const posts = (await getPosts()).slice(0, 3);
         <li><Image src={astro} alt="Astro" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
         <li><Image src={js} alt="JavaScript" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
         <li><Image src={next} alt="Next.js" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
-        <li><Image src={nuxt} alt="Nuxt.js" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
+        <li><Image src={nuxt} alt="Nuxt" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
         <li><Image src={py} alt="Python" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
         <li><Image src={figma} alt="Figma" width={60} height={60} densities={[1, 2]} loading="eager" /></li>
       </ul>
@@ -76,8 +76,8 @@ const posts = (await getPosts()).slice(0, 3);
           <h2 class="build-title split" id="buildTitle">Ship static. <em>Stay fast.</em></h2>
           <ol class="points">
             <li data-r><span class="pn">01</span><div><h3>Static by default</h3><p>Astro renders every page to HTML at build time, so visitors get content instantly with almost no JavaScript.</p></div></li>
-            <li data-r><span class="pn">02</span><div><h3>Content through an API</h3><p>Articles are written in microCMS and pulled in on each build — no database or server to maintain.</p></div></li>
-            <li data-r><span class="pn">03</span><div><h3>Just enough JavaScript</h3><p>Animations and the contact form run on one small script — no framework code is sent to the browser.</p></div></li>
+            <li data-r><span class="pn">02</span><div><h3>Content through an API</h3><p>Articles are written in microCMS and loaded into a typed content collection on each build — no database or server to maintain.</p></div></li>
+            <li data-r><span class="pn">03</span><div><h3>Just enough JavaScript</h3><p>A few small scripts handle the menu and contact form, GSAP loads only on this page, and view transitions make moving between pages seamless.</p></div></li>
           </ol>
         </div>
       </div>
@@ -95,7 +95,7 @@ const posts = (await getPosts()).slice(0, 3);
           <span class="label" data-r><span class="idx">01 /</span>About</span>
           <h2 class="split">Designing and building websites that <em>load fast and stay easy to update.</em></h2>
           <p data-r>I'm a web developer who takes projects from the first wireframe in Figma all the way to a production deploy. My focus is on sites that are quick to load, accessible to everyone and simple for clients to keep up to date.</p>
-          <p data-r>This site itself is an example: pages are generated ahead of time with Astro, blog posts are managed in microCMS, and only the parts that truly need JavaScript run in the browser.</p>
+          <p data-r>This site itself is an example: pages are generated ahead of time with Astro, blog posts are managed in microCMS, images are optimized at build time, and only the parts that truly need JavaScript run in the browser.</p>
           <dl class="facts" data-r>
             <div><dt>// FRAMEWORK</dt><dd>Astro</dd></div>
             <div><dt>// CMS</dt><dd>microCMS</dd></div>
@@ -117,10 +117,10 @@ const posts = (await getPosts()).slice(0, 3);
           <p data-r>The languages, frameworks and tools I use day to day — chosen to fit each project rather than the other way around.</p>
         </div>
         <ul class="skills-grid">
-          <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={astro} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">01</span></div><h3>Astro</h3><p>Content-focused framework that ships zero JavaScript by default. My first choice for fast, SEO-friendly sites.</p><span class="tag">#SSG #Islands</span></li>
-          <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={js} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">02</span></div><h3>JavaScript</h3><p>The foundation of everything on the front end — modern syntax, DOM work and TypeScript for safer code.</p><span class="tag">#ES2023 #TypeScript</span></li>
+          <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={astro} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">01</span></div><h3>Astro</h3><p>Content-focused framework that ships zero JavaScript by default. My first choice for fast, SEO-friendly sites.</p><span class="tag">#SSG #ViewTransitions</span></li>
+          <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={js} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">02</span></div><h3>JavaScript</h3><p>The foundation of everything on the front end — modern syntax, DOM work and TypeScript for safer code.</p><span class="tag">#ESNext #TypeScript</span></li>
           <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={next} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">03</span></div><h3>Next.js</h3><p>React framework for apps that need server-side rendering, API routes and dynamic data.</p><span class="tag">#React #SSR</span></li>
-          <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={nuxt} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">04</span></div><h3>Nuxt.js</h3><p>Vue-based framework with file-based routing, SSR and SSG for flexible, well-structured projects.</p><span class="tag">#Vue #SSR</span></li>
+          <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={nuxt} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">04</span></div><h3>Nuxt</h3><p>Vue-based framework with file-based routing, SSR and SSG for flexible, well-structured projects.</p><span class="tag">#Vue #SSR</span></li>
           <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={py} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">05</span></div><h3>Python</h3><p>Back-end development and automation, including web applications built with Django.</p><span class="tag">#Backend #Django</span></li>
           <li class="skill" data-r><div class="skill-top"><div class="skill-logo"><Image src={figma} alt="" width={64} height={64} densities={[1, 2]} /></div><span class="skill-n">06</span></div><h3>Figma</h3><p>Wireframes, UI design and clickable prototypes — so layout and flow are agreed before coding starts.</p><span class="tag">#UI #Prototype</span></li>
         </ul>

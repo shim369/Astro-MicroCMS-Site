@@ -9,7 +9,7 @@ import "../../styles/scss/style.scss";
 const posts = await getPosts();
 ---
 
-<LayoutHome title="Blog | ASTRO BASE" description="All blog posts from ASTRO BASE — notes on Astro, microCMS and web development.">
+<LayoutHome title="Blog | ASTRO BASE" description="All blog posts from ASTRO BASE — notes on front-end frameworks, microCMS and web development.">
 <SiteHeader current="blog" />
 
 <div class="wrapper">
@@ -21,7 +21,7 @@ const posts = await getPosts();
             <span class="label"><span class="idx">03 /</span>Blog</span>
             <h1 class="sec-title" id="blogTitle">All <span class="o">Posts</span></h1>
           </div>
-          <p>{`${posts.length} ${posts.length === 1 ? "post" : "posts"}`} on Astro, microCMS and web development.</p>
+          <p>{`${posts.length} ${posts.length === 1 ? "post" : "posts"}`} on front-end frameworks, microCMS and web development.</p>
         </div>
         {posts.length > 0 ? (
           <div class="blog-area">
