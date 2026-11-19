@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 
 export interface Props {
 	title: string;
@@ -24,9 +25,16 @@ const {
 		{/* self-hosted at build time (fonts config in astro.config.mjs) */}
 		<Font cssVariable="--font-montserrat" preload={[{ style: "normal" }]} />
 		<Font cssVariable="--font-jetbrains-mono" />
+		<ClientRouter />
 	</head>
 	<body id="top">
 		<script is:inline>document.documentElement.classList.add("js");</script>
 		<slot />
+		<script>
+			// bundled once; each module re-initialises itself on astro:page-load
+			import "../scripts/layout.js";
+			import "../scripts/article.js";
+			import "../scripts/home.js";
+		</script>
 	</body>
 </html>

@@ -1,29 +1,30 @@
 ---
+import { Image } from "astro:assets";
 import LayoutHome from "../../layouts/LayoutHome.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
-import { getArticles } from "../../lib/microcms";
-import type { Article } from "../../lib/microcms";
+import { getPosts, type Post } from "../../lib/posts";
 import "../../styles/scss/style.scss";
 
 export const getStaticPaths = async () => {
-  // microCMS returns newest first: "newer" is the previous item, "older" the next one
-  const articles = await getArticles();
-  return articles.map((article, i) => ({
-    params: { slug: article.id },
+  // posts are newest first: "newer" is the previous item, "older" the next one
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
     props: {
-      article,
-      newer: articles[i - 1] ?? null,
-      older: articles[i + 1] ?? null,
+      post,
+      newer: posts[i - 1] ?? null,
+      older: posts[i + 1] ?? null,
     },
   }));
 };
 
-const { article, newer, older } = Astro.props as {
-  article: Article;
-  newer: Article | null;
-  older: Article | null;
+const { post, newer, older } = Astro.props as {
+  post: Post;
+  newer: Post | null;
+  older: Post | null;
 };
+const { id, data: article } = post;
 
 const stripTags = (html: string) =>
   html.replace(/<[^>]*>/g, "").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
@@ -70,11 +71,14 @@ const date = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(ne
     {article.eyecatch && (
       <div class="container">
         <figure class="post-eyecatch">
-          <img
-            src={`${article.eyecatch.url}?w=1600&fm=webp`}
+          <Image
+            src={article.eyecatch.url}
             alt=""
-            width={article.eyecatch.width ?? 1600}
-            height={article.eyecatch.height ?? 900}
+            width={1600}
+            height={Math.round(1600 * ((article.eyecatch.height ?? 900) / (article.eyecatch.width ?? 1600)))}
+            layout="constrained"
+            priority
+            transition:name={`eyecatch-${id}`}
           />
         </figure>
       </div>
@@ -99,10 +103,10 @@ const date = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(ne
     <div class="container">
       <nav class="post-pager" aria-label="More posts">
         {older ? (
-          <a class="older" href={`/articles/${older.id}`}><small>← Older</small><span>{older.title}</span></a>
+          <a class="older" href={`/articles/${older.id}`}><small>← Older</small><span>{older.data.title}</span></a>
         ) : <span></span>}
         {newer ? (
-          <a class="newer" href={`/articles/${newer.id}`}><small>Newer →</small><span>{newer.title}</span></a>
+          <a class="newer" href={`/articles/${newer.id}`}><small>Newer →</small><span>{newer.data.title}</span></a>
         ) : <span></span>}
       </nav>
 

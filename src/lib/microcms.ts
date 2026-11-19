@@ -1,12 +1,13 @@
 import { createClient } from 'microcms-js-sdk'
 import { MICROCMS_API_KEY, MICROCMS_SERVICE_DOMAIN } from 'astro:env/server'
-import type { Article, ArticleResponse } from '../types/article'
+import type { ArticleResponse } from '../types/article'
 
 export const microcmsClient = createClient({
 	serviceDomain: MICROCMS_SERVICE_DOMAIN,
 	apiKey: MICROCMS_API_KEY,
 })
 
+// Used by the content loader in src/content.config.ts
 export const getArticles = async () => {
 	const { contents } = await microcmsClient.get<ArticleResponse>({
 		endpoint: 'blogs',
@@ -18,4 +19,3 @@ export const getArticles = async () => {
 	return contents
 }
 
-export type { Article }

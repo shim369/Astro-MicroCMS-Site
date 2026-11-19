@@ -70,6 +70,9 @@ export default defineConfig({
     },
   ],
 
+  // Optimize microCMS eyecatch images at build time with <Image />
+  image: { domains: ['images.microcms-assets.io'] },
+
   // Start loading the next page when a link is hovered
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
 });

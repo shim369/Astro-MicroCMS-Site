@@ -1,16 +1,27 @@
 ---
-import type { Article } from "../lib/microcms";
+import { Image } from "astro:assets";
+import type { Post } from "../lib/posts";
 
 export interface Props {
-  article: Article;
+  post: Post;
 }
 
-const { article: a } = Astro.props;
+const { id, data: a } = Astro.props.post;
 ---
 <article class="blog-card" data-r>
-  <a href={`/articles/${a.id}`}>
+  <a href={`/articles/${id}`}>
     <div class="img-category">
-      <img src={a.eyecatch ? a.eyecatch.url : ""} alt={a.title} width="400" height="300" loading="lazy" />
+      {a.eyecatch && (
+        <Image
+          src={a.eyecatch.url}
+          alt={a.title}
+          width={640}
+          height={480}
+          fit="cover"
+          layout="constrained"
+          transition:name={`eyecatch-${id}`}
+        />
+      )}
       {a.category?.name && <p class="cat">{a.category.name}</p>}
       <span class="go" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 15L15 3M6 3h9v9" stroke="currentColor" stroke-width="2"/></svg></span>
     </div>

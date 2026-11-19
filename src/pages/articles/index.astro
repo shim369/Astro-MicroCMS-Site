@@ -3,10 +3,10 @@ import LayoutHome from "../../layouts/LayoutHome.astro";
 import BlogCard from "../../components/BlogCard.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
-import { getArticles } from "../../lib/microcms";
+import { getPosts } from "../../lib/posts";
 import "../../styles/scss/style.scss";
 
-const articles = await getArticles();
+const posts = await getPosts();
 ---
 
 <LayoutHome title="Blog | ASTRO BASE" description="All blog posts from ASTRO BASE — notes on Astro, microCMS and web development.">
@@ -21,11 +21,11 @@ const articles = await getArticles();
             <span class="label"><span class="idx">03 /</span>Blog</span>
             <h1 class="sec-title" id="blogTitle">All <span class="o">Posts</span></h1>
           </div>
-          <p>{`${articles.length} ${articles.length === 1 ? "post" : "posts"}`} on Astro, microCMS and web development.</p>
+          <p>{`${posts.length} ${posts.length === 1 ? "post" : "posts"}`} on Astro, microCMS and web development.</p>
         </div>
-        {articles.length > 0 ? (
+        {posts.length > 0 ? (
           <div class="blog-area">
-            {articles.map((a) => <BlogCard article={a} />)}
+            {posts.map((post) => <BlogCard post={post} />)}
           </div>
         ) : (
           <p class="blog-empty">No posts yet.</p>
