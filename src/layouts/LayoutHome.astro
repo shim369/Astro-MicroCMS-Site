@@ -1,4 +1,6 @@
 ---
+import { Font } from "astro:assets";
+
 export interface Props {
 	title: string;
 	description?: string;
@@ -19,12 +21,9 @@ const {
 		<meta name="theme-color" content="#0a0a0a" />
 		<meta name="generator" content={Astro.generator} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,200;1,800&family=JetBrains+Mono:wght@400;500&display=swap"
-			rel="stylesheet"
-		/>
+		{/* self-hosted at build time (fonts config in astro.config.mjs) */}
+		<Font cssVariable="--font-montserrat" preload={[{ style: "normal" }]} />
+		<Font cssVariable="--font-jetbrains-mono" />
 	</head>
 	<body id="top">
 		<script is:inline>document.documentElement.classList.add("js");</script>

@@ -10,9 +10,9 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"astro": "^3.2.3",
-		"microcms-js-sdk": "^3.5.1",
-		"nodemailer": "^10.1.0"
+		"astro": "^7.4.13",
+		"microcms-js-sdk": "^3.6.0",
+		"nodemailer": "^10.6.0"
 	},
 	"devDependencies": {
 		"@types/nodemailer": "^8.0.2",

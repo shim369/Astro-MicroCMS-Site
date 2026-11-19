@@ -12,9 +12,9 @@ $white: #f4f4ec;
 $red: #ff6b5b;
 $red-deep: #9b1c00;
 
-// type
-$font: "Montserrat", sans-serif;
-$mono: "JetBrains Mono", ui-monospace, monospace;
+// type — families + fallbacks are defined by the fonts config in astro.config.mjs
+$font: var(--font-montserrat);
+$mono: var(--font-jetbrains-mono);
 
 // motion
 $ease: cubic-bezier(.16, 1, .3, 1);

@@ -2,11 +2,11 @@
 import LayoutHome from "../layouts/LayoutHome.astro";
 import BlogCard from "../components/BlogCard.astro";
 import { getArticles } from "../lib/microcms";
+import { PUBLIC_RECAPTCHA_SITE_KEY } from "astro:env/client";
 import "../styles/scss/style.scss";
 
 // Show only the latest 3 posts on the top page
 const articles = (await getArticles()).slice(0, 3);
-const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 ---
 
 <LayoutHome title="ASTRO BASE">
@@ -14,7 +14,7 @@ const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 <div class="cursor" aria-hidden="true"></div>
 
 <header class="site-header" id="siteHeader">
-  <div class="logo"><a href="/" aria-label="ASTRO BASE home"><span>ASTRO</span> <span>BASE</span></a></div>
+  <div class="logo"><a href="/" aria-label="ASTRO BASE home"><span>ASTRO</span><span>BASE</span></a></div>
   <nav class="pc-nav" aria-label="Main">
     <ul class="header-lists">
       <li><a href="#a01"><span class="n">01</span><span class="tw"><span class="t" data-t="About">About</span></span></a></li>
@@ -105,7 +105,7 @@ const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? "";
         <div class="sec-head">
           <div>
             <span class="label" data-r><span class="idx">02 /</span>Skills</span>
-            <h2 class="sec-title split">Skill<span class="y">s</span> <span class="o">Stack</span></h2>
+            <h2 class="sec-title split">Skill<span class="y">s</span><span class="o">Stack</span></h2>
           </div>
           <p data-r>The languages, frameworks and tools I use day to day — chosen to fit each project rather than the other way around.</p>
         </div>
@@ -166,8 +166,8 @@ const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? "";
               <button type="submit" class="submit">Submit <span aria-hidden="true">→</span></button>
               <span class="form-status" id="formStatus" aria-live="polite"></span>
             </div>
-            <p class="reCAPTCHA">This site is protected by reCAPTCHA and the Google
-              <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+            <p class="reCAPTCHA">This site is protected by reCAPTCHA and the Google{" "}
+              <a href="https://policies.google.com/privacy">Privacy Policy</a> and{" "}
               <a href="https://policies.google.com/terms">Terms of Service</a> apply.</p>
           </form>
         </div>
@@ -187,7 +187,7 @@ const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
 	<script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 	<script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-	<script is:inline define:vars={{ recaptchaSiteKey }}>
+	<script is:inline define:vars={{ recaptchaSiteKey: PUBLIC_RECAPTCHA_SITE_KEY }}>
 		window.RECAPTCHA_SITE_KEY = recaptchaSiteKey;
 	</script>
 	<script is:inline src="/home.js"></script>

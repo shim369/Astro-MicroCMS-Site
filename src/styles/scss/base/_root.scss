@@ -1,4 +1,3 @@
-@use "sass:meta";
 @use "../abstracts" as *;
 
 :root {
@@ -10,8 +9,8 @@
   --white: #{$white};
   --muted: #{rgba($white, .58)};
   --line: #{rgba($white, .12)};
-  --font: #{meta.inspect($font)};
-  --mono: #{meta.inspect($mono)};
+  --font: #{$font};
+  --mono: #{$mono};
   --ease: #{$ease};
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --max: 1400px;

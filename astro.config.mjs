@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField, fontProviders } from 'astro/config';
 import { loadEnv } from 'vite';
 
 // Serve Vercel Functions in /api during `astro dev` (production uses Vercel directly)
@@ -39,12 +39,37 @@ const vercelApiDev = () => ({
 // https://astro.build/config
 export default defineConfig({
   integrations: [vercelApiDev()],
-  vite: {
-    css: {
-      preprocessorOptions: {
-        // Vite 4 still calls Sass through its legacy JS API
-        scss: { silenceDeprecations: ['legacy-js-api'] },
-      },
+
+  // Type-safe env vars, validated at build time (import from astro:env/*)
+  env: {
+    schema: {
+      MICROCMS_SERVICE_DOMAIN: envField.string({ context: 'server', access: 'secret' }),
+      MICROCMS_API_KEY: envField.string({ context: 'server', access: 'secret' }),
+      PUBLIC_RECAPTCHA_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true, default: '' }),
     },
+    validateSecrets: true,
   },
+
+  // Self-host Google Fonts at build time (rendered with <Font /> in LayoutHome)
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: 'Montserrat',
+      cssVariable: '--font-montserrat',
+      weights: [200, 300, 400, 500, 700, 800, 900],
+      styles: ['normal', 'italic'],
+      fallbacks: ['sans-serif'],
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'JetBrains Mono',
+      cssVariable: '--font-jetbrains-mono',
+      weights: [400, 500],
+      styles: ['normal'],
+      fallbacks: ['ui-monospace', 'monospace'],
+    },
+  ],
+
+  // Start loading the next page when a link is hovered
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
 });
