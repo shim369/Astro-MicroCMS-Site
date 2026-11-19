@@ -1,8 +1,6 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 
-import react from "@astrojs/react";
-
 // Serve Vercel Functions in /api during `astro dev` (production uses Vercel directly)
 const vercelApiDev = () => ({
   name: 'vercel-api-dev',
@@ -40,7 +38,7 @@ const vercelApiDev = () => ({
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), vercelApiDev()],
+  integrations: [vercelApiDev()],
   vite: {
     css: {
       preprocessorOptions: {
