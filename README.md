@@ -1,112 +1,153 @@
 # Astro Base
 
-Astro + microCMS で作ったポートフォリオサイトです。ブログ記事は microCMS から取得して静的生成し、お問い合わせフォームは Vercel Functions + nodemailer で Gmail に送信します。
+**English** | [日本語](./README.ja.md)
 
-## 技術構成
+A portfolio site built with Astro 7 and microCMS. Blog posts are loaded from microCMS at build time and rendered as static HTML. The contact form sends mail through a Vercel Function with nodemailer and Gmail.
 
-- [Astro](https://astro.build/) 3（静的出力）
-- [microCMS](https://microcms.io/)（`microcms-js-sdk`）
-- Sass（SCSS）
-- GSAP 3 + ScrollTrigger（CDN から読み込み、トップページのアニメーション）
-- 素の JavaScript（`public/home.js` / `public/site.js`。お問い合わせフォームの入力チェックと送信もここで行います）
-- Vercel Functions（`api/contact.ts`）+ nodemailer
-- Google reCAPTCHA v3（任意）
+Demo: https://astrobase.vercel.app/
+
+## Tech stack
+
+- [Astro](https://astro.build/) 7 (static output)
+  - **Content Layer**: loads microCMS posts into a `blogs` content collection at build time and validates them with a zod schema
+  - **`astro:assets`**: converts microCMS eyecatch images and local images to WebP and outputs them with `srcset`
+  - **ClientRouter (View Transitions)**: switches pages without a full reload and animates each blog card image into the article's eyecatch
+  - **`astro:env`**: typed, validated environment variables
+  - **Fonts API**: downloads Montserrat and JetBrains Mono at build time and serves them from the site itself
+  - **Prefetch**: starts loading the next page when a link is hovered
+- [microCMS](https://microcms.io/) (`microcms-js-sdk`)
+- Sass (SCSS)
+- [GSAP](https://gsap.com/) 3 + ScrollTrigger, installed from npm and loaded only on the top page
+- Plain JavaScript modules in `src/scripts/`, with no UI framework
+- Vercel Functions (`api/contact.ts`) + nodemailer
+- Google reCAPTCHA v3 (optional)
 - Node.js 24.x
 
-## ディレクトリ構成
+## Project structure
 
 ```
 /
 ├── api/
-│   └── contact.ts             # お問い合わせ送信（Vercel Function）
+│   └── contact.ts             # Contact form endpoint (Vercel Function)
 ├── public/
-│   ├── home.js                # トップページの動き（GSAP）とお問い合わせフォーム
-│   ├── site.js                # 下層ページ共通（メニュー、目次、読了バーなど）
-│   └── img/
+│   └── img/                   # Images referenced from CSS (hero background, etc.)
 ├── src/
+│   ├── assets/img/            # Images optimized with <Image />
 │   ├── components/
-│   │   ├── BlogCard.astro     # ブログカード
-│   │   ├── SiteHeader.astro   # 下層ページ用ヘッダー
-│   │   └── SiteFooter.astro   # 下層ページ用フッター
+│   │   ├── BlogCard.astro     # Blog card
+│   │   ├── SiteHeader.astro   # Header for sub pages
+│   │   └── SiteFooter.astro   # Footer for sub pages
+│   ├── content.config.ts      # Content collection that loads posts from microCMS
 │   ├── layouts/
-│   │   └── LayoutHome.astro   # 共通レイアウト（head / フォント）
+│   │   └── LayoutHome.astro   # Shared layout (head, fonts, ClientRouter, scripts)
 │   ├── lib/
-│   │   └── microcms.ts        # microCMS クライアント / 記事取得
+│   │   ├── microcms.ts        # microCMS client and fetch
+│   │   └── posts.ts           # Reads posts from the collection, newest first
 │   ├── pages/
-│   │   ├── index.astro        # トップページ
+│   │   ├── index.astro        # Top page
 │   │   ├── articles/
-│   │   │   ├── index.astro    # ブログ一覧
-│   │   │   └── [slug].astro   # 記事ページ
-│   │   ├── thanks.astro       # 送信完了
-│   │   └── error.astro        # 送信失敗
-│   ├── styles/
-│   │   └── scss/              # 下記「スタイル」参照
+│   │   │   ├── index.astro    # Blog list
+│   │   │   └── [slug].astro   # Article page
+│   │   ├── thanks.astro       # Shown after the form is sent
+│   │   └── error.astro        # Shown when sending fails
+│   ├── scripts/
+│   │   ├── lifecycle.js       # Per-page setup and cleanup for the ClientRouter
+│   │   ├── layout.js          # Header, mobile menu, back to top (all pages)
+│   │   ├── home.js            # Top page animations, terminal and contact form
+│   │   └── article.js         # Reading progress bar and table of contents
+│   ├── styles/scss/           # See "Styles" below
 │   └── types/
-│       └── article.ts         # 記事の型定義
+│       └── article.ts         # microCMS API response types
+├── astro.config.mjs
 └── package.json
 ```
 
-## スタイル
+## How it works
 
-`src/styles/scss/style.scss` がエントリーで、各ページはこのファイルだけを読み込みます。
+### Blog posts
 
-| ディレクトリ | 内容 |
+`src/content.config.ts` defines a `blogs` collection whose loader calls `getArticles()` in `src/lib/microcms.ts`. Pages read posts through `getPosts()` in `src/lib/posts.ts`, which keeps microCMS's newest-first order. Each post is generated at `/articles/{content ID}` with links to the older and newer posts.
+
+### Images
+
+The top page imports its images from `src/assets/img/`, and the eyecatch images come from microCMS (`images.microcms-assets.io` is allowed in `image.domains`). All of them are rendered with `<Image />`, so they are resized and converted to WebP at build time.
+
+### Page transitions and scripts
+
+`<ClientRouter />` in `LayoutHome.astro` swaps pages in place instead of reloading. Scripts are bundled once and do not run again on navigation, so each script registers its setup with `onPage()` from `src/scripts/lifecycle.js`:
+
+- Setup runs on `astro:page-load`, which fires on the first visit and after every navigation.
+- Event listeners registered with the given `signal`, GSAP animations (reverted with `gsap.context`), timers and observers are cleaned up on `astro:before-swap`.
+
+The counting loader on the top page appears only on the first visit. When you come back from another page, the hero intro starts right away.
+
+### Contact form
+
+`src/scripts/home.js` validates the fields as you type (required fields and email format). On submit it gets a reCAPTCHA token if a site key is set, then POSTs JSON to `/api/contact`. The reCAPTCHA script is loaded only when the form is sent.
+
+`api/contact.ts` checks the required fields and email format again on the server. If `RECAPTCHA_SECRET_KEY` is set, it also requires a reCAPTCHA score of 0.5 or higher. It then sends the message with nodemailer. Depending on the response, the page moves to `/thanks` or `/error`.
+
+## Styles
+
+`src/styles/scss/style.scss` is the entry point, and every page imports only this file.
+
+| Directory | Contents |
 | :--- | :--- |
-| `abstracts/` | 変数（色・フォント・ブレイクポイント）と mixin（`mq()` など） |
-| `base/` | リセット、CSS 変数（`:root`）、keyframes、スクロール表示と reduced motion |
-| `components/` | 見出しラベル・ボタンなどの共通パーツ、カーソル、ローダー |
-| `layout/` | ヘッダー、フッター |
-| `sections/` | トップページの各セクション |
-| `pages/` | ブログ一覧、記事ページ、thanks / error |
+| `abstracts/` | Variables (colors, fonts, breakpoints) and mixins such as `mq()` |
+| `base/` | Reset, CSS custom properties on `:root`, keyframes, scroll reveal and reduced motion |
+| `components/` | Shared parts (section labels, buttons), cursor, loader |
+| `layout/` | Header and footer |
+| `sections/` | Sections of the top page |
+| `pages/` | Blog list, article page, thanks / error |
 
-色は Sass 変数（`$yellow` など）で管理し、JS から参照できるよう同じ値を CSS 変数（`--yellow` など）としても出力しています。メディアクエリは `@include mq(md)` のように書きます。
+Colors are Sass variables (`$yellow`, etc.). The same values are also output as CSS custom properties (`--yellow`, etc.) so that JavaScript can read them. Write media queries as `@include mq(md)`. The font families come from the Fonts API (`--font-montserrat`, `--font-jetbrains-mono`).
 
-## microCMS の設定
+## microCMS setup
 
-リスト形式の API を作成し、エンドポイントを `blogs` にします。
+Create a list-type API with the endpoint `blogs`.
 
-| フィールド ID | 種類 | 備考 |
+| Field ID | Type | Notes |
 | :--- | :--- | :--- |
-| `title` | テキストフィールド | 記事タイトル |
-| `content` | リッチエディタ | 本文 |
-| `eyecatch` | 画像 | 一覧のサムネイル |
-| `category` | コンテンツ参照 | 参照先に `name` フィールドを持つ |
+| `title` | Text field | Post title |
+| `content` | Rich editor | Body |
+| `eyecatch` | Image | Thumbnail and article header image |
+| `category` | Content reference | The referenced API needs a `name` field |
 
-記事の URL は `/articles/{コンテンツID}` です。
+## Environment variables
 
-## 環境変数
-
-`.env.example` をコピーして `.env` を作成します。
+Copy `.env.example` to `.env` and fill in the values.
 
 ```bash
 cp .env.example .env
 ```
 
-| 変数 | 必須 | 説明 |
-| :--- | :--- | :--- |
-| `MICROCMS_SERVICE_DOMAIN` | ○ | microCMS のサービスドメイン（`xxx.microcms.io` の `xxx`） |
-| `MICROCMS_API_KEY` | ○ | microCMS の API キー |
-| `CONTACT_TO_EMAIL` | ○ | お問い合わせの送信先メールアドレス |
-| `SMTP_USER` | ○ | 送信元の Gmail アドレス |
-| `SMTP_PASS` | ○ | Gmail のアプリパスワード |
-| `SMTP_HOST` | | 省略時 `smtp.gmail.com` |
-| `SMTP_PORT` | | 省略時 `465` |
-| `PUBLIC_RECAPTCHA_SITE_KEY` | | reCAPTCHA v3 のサイトキー。設定時のみフォームで reCAPTCHA を使用 |
-| `RECAPTCHA_SECRET_KEY` | | reCAPTCHA v3 のシークレットキー。設定時のみサーバー側で検証 |
+| Variable | Required | Description |
+| :--- | :---: | :--- |
+| `MICROCMS_SERVICE_DOMAIN` | ✓ | microCMS service domain (`xxx` in `xxx.microcms.io`) |
+| `MICROCMS_API_KEY` | ✓ | microCMS API key |
+| `CONTACT_TO_EMAIL` | ✓ | Address that receives contact messages |
+| `SMTP_USER` | ✓ | Gmail address used to send |
+| `SMTP_PASS` | ✓ | Gmail app password |
+| `SMTP_HOST` | | Defaults to `smtp.gmail.com` |
+| `SMTP_PORT` | | Defaults to `465` |
+| `PUBLIC_RECAPTCHA_SITE_KEY` | | reCAPTCHA v3 site key. The form uses reCAPTCHA only when this is set |
+| `RECAPTCHA_SECRET_KEY` | | reCAPTCHA v3 secret key. The server verifies the token only when this is set |
 
-Vercel にデプロイする場合は、同じ変数を Vercel の Environment Variables にも設定してください。`MICROCMS_*` と `PUBLIC_RECAPTCHA_SITE_KEY` はビルド時に使われるため、変更後は再デプロイが必要です。
+`MICROCMS_*` and `PUBLIC_RECAPTCHA_SITE_KEY` are defined in `env.schema` in `astro.config.mjs` and imported from `astro:env/server` / `astro:env/client`. The build fails if `MICROCMS_*` is missing. The SMTP and reCAPTCHA secret variables are read only by `api/contact.ts`, through `process.env`.
 
-## コマンド
+## Commands
 
-| コマンド | 内容 |
+| Command | Action |
 | :--- | :--- |
-| `npm install` | 依存パッケージをインストール |
-| `npm run dev` | 開発サーバーを起動（`localhost:4321`） |
-| `npm run build` | `./dist/` に本番ビルドを出力 |
-| `npm run preview` | ビルド結果をローカルでプレビュー |
+| `npm install` | Install dependencies |
+| `npm run dev` | Start the dev server at `localhost:4321` |
+| `npm run build` | Build the site to `./dist/` |
+| `npm run preview` | Preview the build locally |
 
-`api/contact.ts` は Vercel Function ですが、`astro.config.mjs` の開発用ミドルウェアにより `npm run dev` でも `/api/contact` が動きます（`.env` の値が使われます）。
+`api/contact.ts` is a Vercel Function, but a small dev-only integration in `astro.config.mjs` serves it during `npm run dev` as well, using the values in `.env`.
 
-## デプロイ
+## Deployment
 
-Vercel にデプロイします。`package.json` の `engines` で Node.js 24.x を指定しています。microCMS の記事を更新したときは、再デプロイ（または microCMS の Webhook で Vercel の Deploy Hook を呼ぶ）で反映されます。
+The site is deployed to Vercel. `engines` in `package.json` pins Node.js 24.x. Set the same environment variables in the Vercel project. Variables used at build time (`MICROCMS_*`, `PUBLIC_RECAPTCHA_SITE_KEY`) take effect only after a redeploy.
+
+Because the site is static, new or updated posts appear only after a rebuild. To rebuild automatically, create a Deploy Hook in the Vercel project (Settings → Git → Deploy Hooks) and register its URL as a webhook in microCMS. Keep the Deploy Hook URL private, because anyone with the URL can trigger a deploy.
