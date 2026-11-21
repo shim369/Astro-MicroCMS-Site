@@ -96,13 +96,16 @@
 
 // giant "ASTRO BASE" at the bottom
 .contact-logo {
+  // flex centring keeps the word centred even if it ever overflows (text-align would push it right)
+  display: flex;
+  justify-content: center;
   margin-top: clamp(4rem, 8vw, 7rem);
   font-weight: 900;
-  font-size: clamp(3.6rem, 15.5vw, 15rem);
+  // fit the container width: "ASTROBASE" is ~6.1em wide at this letter-spacing
+  font-size: clamp(2.5rem, calc((min(100vw, var(--max)) - var(--gutter) * 2) / 6.1), 15rem);
   line-height: .8;
   letter-spacing: -.06em;
   white-space: nowrap;
-  text-align: center;
   user-select: none;
 
   span { display: inline-block; }
