@@ -127,7 +127,12 @@ function animate(gsap, ScrollTrigger, { signal, initial, fine }) {
     gsap.to(counter, {
       v: 100, duration: 1.1, ease: 'power2.inOut',
       onUpdate: () => { count.textContent = Math.round(counter.v); },
-      onComplete: () => { loader.classList.add('done'); intro.play(); setTimeout(() => loader.remove(), 1300); }
+      onComplete: () => {
+        loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+        loader.classList.add('done');
+        // the curtain starts slowly (ease-in), so begin the intro as it opens
+        gsap.delayedCall(.35, () => intro.play());
+      }
     });
   } else {
     loader.remove();

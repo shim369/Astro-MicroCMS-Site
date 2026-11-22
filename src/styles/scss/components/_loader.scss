@@ -9,7 +9,9 @@
   justify-content: space-between;
   padding: var(--gutter);
   font-weight: 900;
-  transition: clip-path 1s var(--ease) .1s;
+  // ease-in (power3.in), not the site's ease-out: a decelerating tail leaves a thin yellow
+  // strip lingering over the header before it disappears, which reads as a flicker
+  transition: clip-path .75s cubic-bezier(.32, 0, .67, 0) .1s;
   clip-path: inset(0 0 0 0);
 
   &.done { clip-path: inset(0 0 100% 0); }
